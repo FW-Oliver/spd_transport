@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>Locations</h1>
+      <p>Manage the clinics and departments that can request SPD transport.</p>
+    </div>
+
+    <%= link_to "Add Location", new_admin_location_path, class: "button button-primary" %>
+  </div>
+
+  <% if notice %>
+    <div class="notice"><%= notice %></div>
+  <% end %>
+
+  <div class="card">
+    <% if @locations.any? %>
+      <table>
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Status</th>
+            <th>QR</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @locations.each do |location| %>
+            <tr>
+              <td>
+                <strong><%= location.name %></strong>
+              </td>
+
+              <td>
+                <% if location.active? %>
+                  <span class="status status-active">Active</span>
+                <% else %>
+                  <span class="status status-inactive">Inactive</span>
+                <% end %>
+              </td>
+
+              <td>
+                <span>Available after QR setup</span>
+              </td>
+
+              <td>
+                <%= link_to "Edit", edit_admin_location_path(location) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="empty-state">
+        <h2>No locations yet</h2>
+        <p>Create your first clinic or OR location.</p>
+
+        <%= link_to "Add Location",
+                    new_admin_location_path,
+                    class: "button button-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

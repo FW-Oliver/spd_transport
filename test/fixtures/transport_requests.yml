@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  organization: one
+  location: one
+  status: MyString
+  requested_by_name: MyString
+  requested_at: 2026-08-13 21:46:07
+  accepted_by: one
+  accepted_at: 2026-08-13 21:46:07
+  arrived_by: one
+  arrived_at: 2026-08-13 21:46:07
+  completed_by: one
+  completed_at: 2026-08-13 21:46:07
+  cancelled_by: one
+  cancelled_at: 2026-08-13 21:46:07
+
+two:
+  organization: two
+  location: two
+  status: MyString
+  requested_by_name: MyString
+  requested_at: 2026-08-13 21:46:07
+  accepted_by: two
+  accepted_at: 2026-08-13 21:46:07
+  arrived_by: two
+  arrived_at: 2026-08-13 21:46:07
+  completed_by: two
+  completed_at: 2026-08-13 21:46:07
+  cancelled_by: two
+  cancelled_at: 2026-08-13 21:46:07

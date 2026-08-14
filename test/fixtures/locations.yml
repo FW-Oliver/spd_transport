@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  organization: one
+  name: MyString
+  active: false
+  qr_token: MyString
+
+two:
+  organization: two
+  name: MyString
+  active: false
+  qr_token: MyString
