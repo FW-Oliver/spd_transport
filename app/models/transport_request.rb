@@ -6,6 +6,10 @@ class TransportRequest < ApplicationRecord
              class_name: "User",
              optional: true
 
+  belongs_to :in_transit_by,
+           class_name: "User",
+           optional: true
+
   belongs_to :arrived_by,
              class_name: "User",
              optional: true

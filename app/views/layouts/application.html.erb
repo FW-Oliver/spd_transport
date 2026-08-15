@@ -24,6 +24,16 @@
   </head>
 
   <body>
+        <% if authenticated? %>
+        <div class="top-bar">
+          <span>Signed in as <%= Current.user.email_address %></span>
+
+          <%= button_to "Log out",
+                session_path,
+                method: :delete,
+                class: "logout-button" %>
+        </div>
+      <% end %>
     <%= yield %>
   </body>
 </html>

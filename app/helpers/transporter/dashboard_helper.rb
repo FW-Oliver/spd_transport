@@ -1,0 +1,2 @@
+module Transporter::DashboardHelper
+end

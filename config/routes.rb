@@ -1,4 +1,21 @@
 Rails.application.routes.draw do
+
+      namespace :transporter do
+      get "/", to: "dashboard#index", as: :dashboard
+
+      post "requests/:id/accept",
+        to: "requests#accept",
+        as: :accept_request
+
+      post "requests/:id/start_transport",
+        to: "requests#start_transport",
+        as: :start_transport
+
+      post "requests/:id/complete",
+        to: "requests#complete",
+        as: :complete_request
+    end
+
   resource :session
   resources :passwords, param: :token
 
@@ -20,5 +37,3 @@ post "l/:qr_token/cancel/:request_id",
      
 root "admin/locations#index"
 end
-
-

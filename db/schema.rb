@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_14_014607) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_15_050238) do
   create_table "locations", force: :cascade do |t|
     t.boolean "active", default: true
     t.datetime "created_at", null: false
@@ -46,6 +46,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_014607) do
     t.datetime "completed_at"
     t.integer "completed_by_id"
     t.datetime "created_at", null: false
+    t.datetime "in_transit_at"
+    t.integer "in_transit_by_id"
     t.integer "location_id", null: false
     t.integer "organization_id", null: false
     t.datetime "requested_at", null: false
@@ -56,6 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_014607) do
     t.index ["arrived_by_id"], name: "index_transport_requests_on_arrived_by_id"
     t.index ["cancelled_by_id"], name: "index_transport_requests_on_cancelled_by_id"
     t.index ["completed_by_id"], name: "index_transport_requests_on_completed_by_id"
+    t.index ["in_transit_by_id"], name: "index_transport_requests_on_in_transit_by_id"
     t.index ["location_id"], name: "index_transport_requests_on_location_id"
     t.index ["organization_id"], name: "index_transport_requests_on_organization_id"
   end
@@ -79,5 +82,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_014607) do
   add_foreign_key "transport_requests", "users", column: "arrived_by_id"
   add_foreign_key "transport_requests", "users", column: "cancelled_by_id"
   add_foreign_key "transport_requests", "users", column: "completed_by_id"
+  add_foreign_key "transport_requests", "users", column: "in_transit_by_id"
   add_foreign_key "users", "organizations"
 end
