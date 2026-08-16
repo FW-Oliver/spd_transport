@@ -1,4 +1,6 @@
 <div class="container narrow">
+  <%= turbo_stream_from @location %>
+
   <div class="card location-card">
 
     <p class="location-label">SPD TRANSPORT</p>
@@ -42,83 +44,88 @@
 
     <% end %>
 
-    <% if @requests.any? %>
+    <div id="transport-requests">
 
-      <div class="requests-section">
+      <% if @requests.any? %>
 
-        <h2>Transport Requests</h2>
+        <div class="requests-section">
 
-        <% @requests.each do |request| %>
+          <h2>Transport Requests</h2>
 
-          <div class="request-card">
+          <% @requests.each do |request| %>
 
-            <div class="request-info">
+            <div class="request-card">
 
-              <strong>
-                <%= request.requested_by_name %>
-              </strong>
+              <div class="request-info">
 
-              <span>
-                <%= request.requested_at.strftime("%I:%M %p") %>
-              </span>
+                <strong>
+                  <%= request.requested_by_name %>
+                </strong>
+
+                <span>
+                  <%= request.requested_at.strftime("%I:%M %p") %>
+                </span>
+
+              </div>
+
+              <div class="request-status">
+
+                <% if request.status == "requested" %>
+
+                  <span class="status status-requested">
+                    Requested
+                  </span>
+
+                <% elsif request.status == "accepted" %>
+
+                  <span class="status status-accepted">
+                    Accepted
+                  </span>
+
+                <% elsif request.status == "in_transit" %>
+
+                  <span class="status status-in-transit">
+                    In-Transit
+                  </span>
+
+                <% elsif request.status == "completed" %>
+
+                  <span class="status status-completed">
+                    Completed
+                  </span>
+
+                <% elsif request.status == "cancelled" %>
+
+                  <span class="status status-cancelled">
+                    Cancelled
+                  </span>
+
+                <% end %>
+
+              </div>
+
+              <% if request.cancellable? %>
+
+                <%= button_to "Cancel Request",
+                      cancel_location_transport_path(
+                        @location.qr_token,
+                        request_id: request.id
+                      ),
+                      method: :post,
+                      class: "button button-cancel" %>
+
+              <% end %>
 
             </div>
-
-        <div class="request-status">
-
-          <% if request.status == "requested" %>
-
-            <span class="status status-requested">
-              Requested
-            </span>
-
-          <% elsif request.status == "accepted" %>
-
-            <span class="status status-accepted">
-              Accepted
-            </span>
-
-          <% elsif request.status == "in_transit" %>
-
-            <span class="status status-in-transit">
-              In-Transit
-            </span>
-
-          <% elsif request.status == "completed" %>
-
-            <span class="status status-completed">
-              Completed
-            </span>
-
-          <% elsif request.status == "cancelled" %>
-
-            <span class="status status-cancelled">
-              Cancelled
-            </span>
 
           <% end %>
 
         </div>
 
-            <% if request.cancellable? %>
+      <% end %>
 
-              <%= button_to "Cancel Request",
-                    cancel_location_transport_path(
-                      @location.qr_token,
-                      request_id: request.id
-                    ),
-                    method: :post,
-                    class: "button button-cancel" %>
-
-            <% end %>
-
-          </div>
-
-        <% end %>
-
-      </div>
-
-    <% end %>
+    </div>
 
   </div>
+
 </div>

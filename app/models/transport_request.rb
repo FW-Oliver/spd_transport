@@ -1,4 +1,8 @@
 class TransportRequest < ApplicationRecord
+  broadcasts_to :location,
+  target: "transport-requests",
+  partial: "locations/transport_requests"
+  
   belongs_to :organization
   belongs_to :location
 
