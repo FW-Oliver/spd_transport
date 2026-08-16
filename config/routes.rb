@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "/dashboard", to: "dashboard#index", as: :dashboard
 
       namespace :transporter do
       get "/", to: "dashboard#index", as: :dashboard

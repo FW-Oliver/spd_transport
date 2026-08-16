@@ -1,0 +1,84 @@
+<div class="dashboard">
+
+  <h1>SPD Transport Dashboard</h1>
+
+  <p>
+    Transport activity for
+    <strong><%= current_user.organization.name %></strong>
+  </p>
+
+  <% if @requests.any? %>
+
+    <div class="requests-section">
+
+      <h2>Transport Requests</h2>
+
+      <% @requests.each do |request| %>
+
+        <div class="request-card">
+
+          <div class="request-info">
+
+            <strong>
+              <%= request.location.name %>
+            </strong>
+
+            <span>
+              <%= request.requested_by_name %>
+            </span>
+
+            <span>
+              <%= request.requested_at.strftime("%I:%M %p") %>
+            </span>
+
+          </div>
+
+          <div class="request-status">
+
+            <% if request.status == "requested" %>
+
+              <span class="status status-requested">
+                Requested
+              </span>
+
+            <% elsif request.status == "accepted" %>
+
+              <span class="status status-accepted">
+                Accepted
+              </span>
+
+            <% elsif request.status == "in_transit" %>
+
+              <span class="status status-in-transit">
+                In-Transit
+              </span>
+
+            <% elsif request.status == "completed" %>
+
+              <span class="status status-completed">
+                Completed
+              </span>
+
+            <% elsif request.status == "cancelled" %>
+
+              <span class="status status-cancelled">
+                Cancelled
+              </span>
+
+            <% end %>
+
+          </div>
+
+        </div>
+
+      <% end %>
+
+    </div>
+
+  <% else %>
+
+    <p>No transport requests yet.</p>
+
+  <% end %>
+
+</div>

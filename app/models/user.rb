@@ -6,8 +6,8 @@ class User < ApplicationRecord
 
   enum :role, {
     admin: "admin",
-    manager: "manager",
     transporter: "transporter",
+    viewer: "viewer",
     nurse: "nurse"
   }, default: :nurse
 end
