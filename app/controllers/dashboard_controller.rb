@@ -2,6 +2,12 @@ class DashboardController < ApplicationController
   before_action :require_dashboard_access
 
   def index
+    @locations = current_user.organization
+                                .locations
+                                .active
+                                .includes(:transport_requests)
+                                .order(:name)
+
     @requests = current_user.organization
                               .transport_requests
                               .includes(:location)

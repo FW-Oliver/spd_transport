@@ -29,18 +29,14 @@ class SessionsController < ApplicationController
 
   private
 
-  def after_authentication_url
-    return_to = session.delete(:return_to_after_authenticating)
-
-    return return_to if return_to.present?
-
+    def after_authentication_url
     case Current.user.role
     when "admin"
       root_path
     when "transporter"
       transporter_dashboard_path
     when "viewer"
-      root_path
+      dashboard_path
     when "nurse"
       root_path
     else

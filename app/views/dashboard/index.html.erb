@@ -7,6 +7,35 @@
     <strong><%= current_user.organization.name %></strong>
   </p>
 
+<div class="clinic-buttons">
+
+  <h2>Clinics</h2>
+
+  <div class="clinic-button-list">
+
+    <% @locations.each do |location| %>
+
+      <% active_count = location.transport_requests.active.count %>
+
+      <%= link_to location_path(location.qr_token),
+                  class: "button button-primary" do %>
+
+        <%= location.name %>
+
+        <% if active_count > 0 %>
+          <span class="request-count">
+            <%= active_count %>
+          </span>
+        <% end %>
+
+      <% end %>
+
+    <% end %>
+
+  </div>
+
+</div>
+
   <% if @requests.any? %>
 
     <div class="requests-section">
