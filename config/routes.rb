@@ -21,7 +21,11 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
 
   namespace :admin do
-    resources :locations, only: %i[index new create edit update]
+    resources :locations, only: %i[index new create edit update] do
+      get :qr_poster, on: :member
+    end
+
+      resources :transporter_actions
   end
 
 get "l/:qr_token",

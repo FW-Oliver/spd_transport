@@ -1,0 +1,112 @@
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <h1>Transporter Actions</h1>
+      <p>
+        Manage the actions available to SPD transporter users.
+      </p>
+    </div>
+
+    <%= link_to "Add Transporter Action",
+                new_admin_transporter_action_path,
+                class: "button button-primary" %>
+  </div>
+
+  <% if notice %>
+    <div class="notice">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <div class="card">
+
+    <% if @actions.any? %>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Description</th>
+            <th>Photo</th>
+            <th>Status</th>
+            <th>Position</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <% @actions.each do |action| %>
+
+            <tr>
+
+              <td>
+                <strong>
+                  <%= action.name %>
+                </strong>
+              </td>
+
+              <td>
+                <%= action.description.presence || "—" %>
+              </td>
+
+              <td>
+                <% if action.requires_photo? %>
+                  <span class="status status-active">
+                    Required
+                  </span>
+                <% else %>
+                  <span>
+                    Not required
+                  </span>
+                <% end %>
+              </td>
+
+              <td>
+                <% if action.active? %>
+                  <span class="status status-active">
+                    Active
+                  </span>
+                <% else %>
+                  <span class="status status-inactive">
+                    Inactive
+                  </span>
+                <% end %>
+              </td>
+
+              <td>
+                <%= action.position %>
+              </td>
+
+              <td>
+                <%= link_to "Edit",
+                            edit_admin_transporter_action_path(action) %>
+              </td>
+
+            </tr>
+
+          <% end %>
+
+        </tbody>
+      </table>
+
+    <% else %>
+
+      <div class="empty-state">
+        <h2>No transporter actions yet</h2>
+
+        <p>
+          Add the actions that SPD transporters can perform.
+        </p>
+
+        <%= link_to "Add Transporter Action",
+                    new_admin_transporter_action_path,
+                    class: "button button-primary" %>
+      </div>
+
+    <% end %>
+
+  </div>
+
+</div>

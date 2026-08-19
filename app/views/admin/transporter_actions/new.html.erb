@@ -1,0 +1,101 @@
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <h1>Add Transporter Action</h1>
+      <p>Create an action that SPD transporters can perform.</p>
+    </div>
+
+    <%= link_to "Back to Actions",
+                admin_transporter_actions_path,
+                class: "button" %>
+  </div>
+
+  <div class="card">
+
+    <%= form_with model: [:admin, @action] do |form| %>
+
+      <% if @action.errors.any? %>
+        <div class="error">
+          <strong>
+            <%= pluralize(@action.errors.count, "error") %>
+            prevented this action from being saved:
+          </strong>
+
+          <ul>
+            <% @action.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :name, "Action name" %>
+
+        <%= form.text_field :name,
+                            placeholder: "e.g. Pick Up",
+                            required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :description, "Description" %>
+
+        <%= form.text_area :description,
+                           rows: 4,
+                           placeholder: "Optional instructions for the transporter." %>
+      </div>
+
+      <div class="form-group">
+
+        <label>
+          <%= form.check_box :requires_photo %>
+
+          Requires photo evidence
+        </label>
+
+        <p>
+          If enabled, the transporter will be required to take a photo
+          when performing this action.
+        </p>
+
+      </div>
+
+      <div class="form-group">
+
+        <%= form.label :position, "Display order" %>
+
+        <%= form.number_field :position,
+                              min: 0,
+                              value: @action.position || 0 %>
+
+        <p>
+          Lower numbers appear first.
+        </p>
+
+      </div>
+
+      <div class="form-group">
+
+        <label>
+          <%= form.check_box :active %>
+
+          Active
+        </label>
+
+        <p>
+          Active actions will be available to transporter users.
+        </p>
+
+      </div>
+
+      <div>
+        <%= form.submit "Create Transporter Action",
+                        class: "button button-primary" %>
+      </div>
+
+    <% end %>
+
+  </div>
+
+</div>
