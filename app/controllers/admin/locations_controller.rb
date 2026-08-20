@@ -1,7 +1,7 @@
 class Admin::LocationsController < ApplicationController
   before_action :require_authentication
   before_action :require_admin
-  before_action :set_location, only: %i[edit update]
+  before_action :set_location, only: %i[edit update qr_poster]
 
   def index
     @locations = current_user.organization.locations.order(:name)
@@ -32,7 +32,12 @@ class Admin::LocationsController < ApplicationController
     end
   end
 
-  private
+  def qr_poster
+    @qr_url = location_url(@location.qr_token)
+    @qr_code = RQRCode::QRCode.new(@qr_url)
+  end
+
+private
 
   def set_location
     @location = current_user.organization.locations.find(params[:id])

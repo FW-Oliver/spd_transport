@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_050238) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_18_224644) do
   create_table "locations", force: :cascade do |t|
     t.boolean "active", default: true
     t.datetime "created_at", null: false
@@ -63,6 +63,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_050238) do
     t.index ["organization_id"], name: "index_transport_requests_on_organization_id"
   end
 
+  create_table "transporter_actions", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "name", null: false
+    t.integer "organization_id", null: false
+    t.integer "position", default: 0, null: false
+    t.boolean "requires_photo", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_transporter_actions_on_organization_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email_address", null: false
@@ -83,5 +95,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_050238) do
   add_foreign_key "transport_requests", "users", column: "cancelled_by_id"
   add_foreign_key "transport_requests", "users", column: "completed_by_id"
   add_foreign_key "transport_requests", "users", column: "in_transit_by_id"
+  add_foreign_key "transporter_actions", "organizations"
   add_foreign_key "users", "organizations"
 end

@@ -1,0 +1,50 @@
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <h1>QR Poster</h1>
+      <p><%= @location.name %></p>
+    </div>
+
+    <%= link_to "Back to Locations",
+                admin_locations_path,
+                class: "button" %>
+  </div>
+
+  <div class="card">
+
+    <div class="qr-poster">
+
+      <p>SPD TRANSPORT</p>
+
+      <h1>REQUEST A PICKUP</h1>
+
+        <div class="qr-code">
+          <%= raw @qr_code.as_svg(
+                module_size: 6,
+                standalone: true,
+                use_path: true
+              ) %>
+        </div>
+
+      <h2><%= @location.name %></h2>
+
+      <p>
+        Scan this QR code to request SPD transport pickup.
+      </p>
+
+      <ol>
+        <li>Scan the QR code.</li>
+        <li>Enter your name.</li>
+        <li>Tap "Request Transport Pick Up".</li>
+      </ol>
+
+      <p>
+        Use this page when instruments are ready for SPD collection.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
