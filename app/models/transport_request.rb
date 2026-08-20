@@ -3,6 +3,8 @@ class TransportRequest < ApplicationRecord
   target: "transport-requests",
   partial: "locations/transport_requests"
   
+  has_many :transport_activities, dependent: :destroy
+  
   belongs_to :organization
   belongs_to :location
 

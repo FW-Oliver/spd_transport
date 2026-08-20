@@ -1,0 +1,2 @@
+module Transporter::ActivitiesHelper
+end

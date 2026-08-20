@@ -20,7 +20,25 @@
     </div>
   <% end %>
 
-  <div class="card">
+<div class="card">
+
+  <h2>Locations</h2>
+
+  <p>Select the clinic or department you are currently visiting.</p>
+
+  <div class="clinic-button-list">
+
+    <% @locations.each do |location| %>
+
+      <%= link_to location.name,
+                  transporter_location_path(location),
+                  class: "button button-primary" %>
+
+    <% end %>
+
+  </div>
+
+</div>
 
     <% if @requests.any? %>
 

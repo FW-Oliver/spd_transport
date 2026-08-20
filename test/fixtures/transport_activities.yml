@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  organization: one
+  transport_request: one
+  transporter_action: one
+  user: one
+  location: one
+  performed_at: 2026-08-19 21:43:02
+
+two:
+  organization: two
+  transport_request: two
+  transporter_action: two
+  user: two
+  location: two
+  performed_at: 2026-08-19 21:43:02

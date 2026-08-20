@@ -3,6 +3,11 @@ class Transporter::DashboardController < ApplicationController
   before_action :require_transporter
 
   def index
+    @locations = current_user.organization
+                              .locations
+                              .active
+                              .order(:name)
+
     @requests = current_user.organization
                               .transport_requests
                               .where(status: %w[requested accepted in_transit])

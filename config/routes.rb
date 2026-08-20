@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  namespace :transporter do
+    get "locations/:id",
+        to: "locations#show",
+        as: :location
+
+    post "locations/:location_id/activities",
+        to: "activities#create",
+        as: :location_activities
+  end
+
   get "/dashboard", to: "dashboard#index", as: :dashboard
 
       namespace :transporter do

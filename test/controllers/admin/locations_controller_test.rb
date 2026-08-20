@@ -1,28 +1,24 @@
 require "test_helper"
 
 class Admin::LocationsControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @admin = User.find_by(role: "admin")
+    sign_in_as(@admin)
+  end
+
   test "should get index" do
-    get admin_locations_index_url
+    get admin_locations_path
     assert_response :success
   end
 
   test "should get new" do
-    get admin_locations_new_url
-    assert_response :success
-  end
-
-  test "should get create" do
-    get admin_locations_create_url
+    get new_admin_location_path
     assert_response :success
   end
 
   test "should get edit" do
-    get admin_locations_edit_url
-    assert_response :success
-  end
-
-  test "should get update" do
-    get admin_locations_update_url
+    location = @admin.organization.locations.first
+    get edit_admin_location_path(location)
     assert_response :success
   end
 end

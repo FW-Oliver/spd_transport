@@ -1,13 +1,11 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
   organization: one
-  name: MyString
+  name: OR 4
   active: false
-  qr_token: MyString
+  qr_token: or-4-test
 
 two:
-  organization: two
-  name: MyString
-  active: false
-  qr_token: MyString
+  organization: one
+  name: OR
+  active: true
+  qr_token: or-test
