@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="page-header">
+    <div>
+      <p class="location-label">SPD TRANSPORT</p>
+      <h1>Welcome</h1>
+      <p>How would you like to access SPD Transport?</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="clinic-button-list">
+
+      <%= link_to "I AM ADMIN",
+                  role_path("admin"),
+                  class: "button button-primary" %>
+
+      <%= link_to "I AM A VIEWER",
+                  role_path("viewer"),
+                  class: "button button-primary" %>
+
+      <%= link_to "I AM TRANSPORTER FOR TODAY",
+                  role_path("transporter"),
+                  class: "button button-primary" %>
+
+      <%= link_to "I HAVE NO CREDENTIALS",
+                  role_path("none"),
+                  class: "button" %>
+
+    </div>
+  </div>
+</div>
