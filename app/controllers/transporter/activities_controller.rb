@@ -2,6 +2,13 @@ class Transporter::ActivitiesController < ApplicationController
   before_action :require_authentication
   before_action :require_transporter
 
+  def index
+    @activities = current_user.organization
+                              .transport_activities
+                              .includes(:user, :transporter_action, :location, photo_attachment: :blob)
+                              .order(performed_at: :desc)
+  end
+
   def create
     location = current_user.organization
                            .locations
@@ -9,19 +16,19 @@ class Transporter::ActivitiesController < ApplicationController
                            .find(params[:location_id])
 
     action = current_user.organization
-                          .transporter_actions
-                          .where(active: true)
-                          .find(params[:transporter_action_id])
+                        .transporter_actions
+                        .where(active: true)
+                        .find(params[:transporter_action_id])
 
-activity = TransportActivity.new(
-  organization: current_user.organization,
-  location: location,
-  transporter_action: action,
-  user: current_user,
-  performed_at: Time.current
-)
+    activity = TransportActivity.new(
+      organization: current_user.organization,
+      location: location,
+      transporter_action: action,
+      user: current_user,
+      performed_at: Time.current
+    )
 
-activity.photo.attach(params[:photo]) if params[:photo].present?
+    activity.photo.attach(params[:photo]) if params[:photo].present?
 
     if activity.save
       redirect_to transporter_location_path(location),

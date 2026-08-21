@@ -1,31 +1,31 @@
 Rails.application.routes.draw do
   namespace :transporter do
     get "locations/:id",
-        to: "locations#show",
-        as: :location
+      to: "locations#show",
+      as: :location
+
+    get "activities",
+      to: "activities#index",
+      as: :activities
+
+    get "/", to: "dashboard#index", as: :dashboard
 
     post "locations/:location_id/activities",
-        to: "activities#create",
-        as: :location_activities
+      to: "activities#create",
+      as: :location_activities
+
+    post "requests/:id/accept",
+      to: "requests#accept",
+      as: :accept_request
+
+    post "requests/:id/start_transport",
+      to: "requests#start_transport",
+      as: :start_transport
+
+    post "requests/:id/complete",
+      to: "requests#complete",
+      as: :complete_request
   end
-
-  get "/dashboard", to: "dashboard#index", as: :dashboard
-
-      namespace :transporter do
-      get "/", to: "dashboard#index", as: :dashboard
-
-      post "requests/:id/accept",
-        to: "requests#accept",
-        as: :accept_request
-
-      post "requests/:id/start_transport",
-        to: "requests#start_transport",
-        as: :start_transport
-
-      post "requests/:id/complete",
-        to: "requests#complete",
-        as: :complete_request
-    end
 
   resource :session
   resources :passwords, param: :token

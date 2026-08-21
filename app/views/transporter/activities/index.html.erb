@@ -1,0 +1,97 @@
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <p class="location-label">SPD TRANSPORT</p>
+      <h1>Activity Log</h1>
+      <p>Recent transporter activity for your organization.</p>
+    </div>
+
+    <%= link_to "Back to Dashboard",
+                transporter_dashboard_path,
+                class: "button" %>
+  </div>
+
+  <div class="card">
+
+    <h2>Transport Activity</h2>
+
+    <% if @activities.empty? %>
+
+      <div class="empty-state">
+        <h3>No activity recorded</h3>
+        <p>
+          Transport activities will appear here after they are submitted.
+        </p>
+      </div>
+
+    <% else %>
+
+      <div class="activity-log">
+
+        <% @activities.each do |activity| %>
+
+          <div class="activity-log-entry">
+
+            <div class="activity-log-main">
+
+              <div class="activity-log-action">
+                <strong>
+                  <%= activity.transporter_action.name %>
+                </strong>
+              </div>
+
+              <div class="activity-log-details">
+
+                <span>
+                  <strong>Time:</strong>
+                  <%= activity.performed_at.strftime("%m/%d/%Y %I:%M %p") %>
+                </span>
+
+                <span>
+                  <strong>Transporter:</strong>
+                  <%= activity.user.email_address %>
+                </span>
+
+                <span>
+                  <strong>Location:</strong>
+                  <%= activity.location.name %>
+                </span>
+
+              </div>
+
+            </div>
+
+            <div class="activity-log-photo">
+
+              <% if activity.photo.attached? %>
+
+                <%= link_to "📷 View Photo",
+                            rails_blob_path(
+                              activity.photo,
+                              disposition: "inline"
+                            ),
+                            target: "_blank",
+                            class: "button" %>
+
+              <% else %>
+
+                <span class="no-photo">
+                  No photo
+                </span>
+
+              <% end %>
+
+            </div>
+
+          </div>
+
+        <% end %>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+</div>

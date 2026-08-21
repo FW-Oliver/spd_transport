@@ -1,5 +1,17 @@
 <div class="container">
 
+  <% if notice %>
+    <div class="notice">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <% if alert %>
+    <div class="error">
+      <%= alert %>
+    </div>
+  <% end %>
+
   <div class="page-header">
     <div>
       <p class="location-label">SPD TRANSPORT</p>
@@ -13,17 +25,16 @@
   </div>
 
   <div class="card">
-
     <h2>Transport Actions</h2>
 
     <div class="clinic-button-list">
-
       <% @actions.each do |action| %>
-
         <div>
           <button type="button"
-                  class="button button-primary"
-                  disabled>
+                  class="button button-primary activity-action-button"
+                  data-action-id="<%= action.id %>"
+                  data-action-name="<%= action.name %>"
+                  data-requires-photo="<%= action.requires_photo? %>">
             <%= action.name %>
           </button>
 
@@ -31,11 +42,596 @@
             <small>📷 Photo required</small>
           <% end %>
         </div>
-
       <% end %>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Photo Source Modal -->
+
+<dialog id="photo-source-modal">
+
+  <div class="activity-modal">
+
+    <p class="location-label">PHOTO EVIDENCE</p>
+
+    <h2>Add Photo</h2>
+
+    <p>
+      How would you like to add the photo?
+    </p>
+
+    <div class="photo-source-options">
+
+      <button type="button"
+              id="open-camera"
+              class="button button-primary">
+        📷 Take Photo
+      </button>
+
+      <button type="button"
+              id="open-library"
+              class="button">
+        🖼 Choose Photo
+      </button>
+
+      <button type="button"
+              id="cancel-photo-source"
+              class="button">
+        Cancel
+      </button>
 
     </div>
 
   </div>
 
-</div>
+</dialog>
+
+
+<!-- Camera Modal -->
+
+<dialog id="camera-modal">
+
+  <div class="activity-modal camera-modal-content">
+
+    <p class="location-label">PHOTO EVIDENCE</p>
+
+    <h2>Take Photo</h2>
+
+    <video id="camera-video"
+           autoplay
+           playsinline
+           muted
+           style="width:100%; max-width:600px; border-radius:12px; background:#000;">
+    </video>
+
+    <canvas id="camera-canvas"
+            hidden>
+    </canvas>
+
+    <div class="activity-modal-actions">
+
+      <button type="button"
+              id="cancel-camera"
+              class="button">
+        Cancel
+      </button>
+
+      <button type="button"
+              id="capture-photo"
+              class="button button-primary">
+        📷 Capture Photo
+      </button>
+
+    </div>
+
+  </div>
+
+</dialog>
+
+
+<!-- Activity Confirmation Modal -->
+
+<dialog id="activity-modal">
+
+  <div class="activity-modal">
+
+    <div class="page-header">
+      <div>
+        <p class="location-label">TRANSPORT ACTIVITY</p>
+        <h2>Confirm Activity</h2>
+      </div>
+    </div>
+
+    <div class="activity-details">
+
+      <div class="activity-detail">
+        <span>Name</span>
+        <strong><%= current_user.email_address %></strong>
+      </div>
+
+      <div class="activity-detail">
+        <span>Action</span>
+        <strong id="activity-action-name"></strong>
+      </div>
+
+      <div class="activity-detail">
+        <span>Location</span>
+        <strong><%= @location.name %></strong>
+      </div>
+
+      <div class="activity-detail">
+        <span>Timestamp</span>
+        <strong id="activity-timestamp"></strong>
+      </div>
+
+    </div>
+
+    <form id="activity-form"
+          method="post"
+          action="<%= transporter_location_activities_path(@location) %>"
+          enctype="multipart/form-data">
+
+      <%= hidden_field_tag :authenticity_token,
+                           form_authenticity_token %>
+
+      <%= hidden_field_tag :transporter_action_id,
+                           "",
+                           id: "activity-action-id" %>
+
+      <div class="activity-photo-section">
+
+        <h3>Photo Evidence</h3>
+
+        <button type="button"
+                id="add-photo"
+                class="button button-primary">
+          📷 Add Photo
+        </button>
+
+        <p id="photo-requirement"></p>
+
+        <input id="activity-photo"
+               type="file"
+               name="photo"
+               accept="image/*"
+               hidden>
+
+        <div id="photo-preview-container" hidden>
+
+          <img id="photo-preview"
+               alt="Photo evidence preview"
+               style="max-width:100%; max-height:300px; border-radius:12px;">
+
+          <button type="button"
+                  id="retake-photo"
+                  class="button">
+            Retake Photo
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="activity-modal-actions">
+
+        <button type="button"
+                id="cancel-activity"
+                class="button">
+          Cancel
+        </button>
+
+        <button type="submit"
+                id="submit-activity"
+                class="button button-primary">
+          SUBMIT
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</dialog>
+
+
+<script>
+  (() => {
+
+    const modal =
+      document.getElementById("activity-modal");
+
+    const photoSourceModal =
+      document.getElementById("photo-source-modal");
+
+    const cameraModal =
+      document.getElementById("camera-modal");
+
+    const actionButtons =
+      document.querySelectorAll(".activity-action-button");
+
+    const actionId =
+      document.getElementById("activity-action-id");
+
+    const actionName =
+      document.getElementById("activity-action-name");
+
+    const timestamp =
+      document.getElementById("activity-timestamp");
+
+    const addPhoto =
+      document.getElementById("add-photo");
+
+    const activityPhoto =
+      document.getElementById("activity-photo");
+
+    const photoRequirement =
+      document.getElementById("photo-requirement");
+
+    const photoPreviewContainer =
+      document.getElementById("photo-preview-container");
+
+    const photoPreview =
+      document.getElementById("photo-preview");
+
+    const retakePhoto =
+      document.getElementById("retake-photo");
+
+    const openCamera =
+      document.getElementById("open-camera");
+
+    const openLibrary =
+      document.getElementById("open-library");
+
+    const cancelPhotoSource =
+      document.getElementById("cancel-photo-source");
+
+    const cameraVideo =
+      document.getElementById("camera-video");
+
+    const cameraCanvas =
+      document.getElementById("camera-canvas");
+
+    const capturePhoto =
+      document.getElementById("capture-photo");
+
+    const cancelCamera =
+      document.getElementById("cancel-camera");
+
+    const cancelActivity =
+      document.getElementById("cancel-activity");
+
+    const submitActivity =
+      document.getElementById("submit-activity");
+
+    let photoRequired = false;
+
+    let cameraStream = null;
+
+
+    function updateSubmitState() {
+
+      if (photoRequired) {
+        submitActivity.disabled =
+          !activityPhoto.files.length;
+      } else {
+        submitActivity.disabled = false;
+      }
+
+    }
+
+
+    function resetPhoto() {
+
+      activityPhoto.value = "";
+
+      photoPreview.src = "";
+
+      photoPreviewContainer.hidden = true;
+
+      updateSubmitState();
+
+    }
+
+
+    function stopCamera() {
+
+      if (cameraStream) {
+
+        cameraStream.getTracks().forEach((track) => {
+          track.stop();
+        });
+
+        cameraStream = null;
+
+      }
+
+      cameraVideo.srcObject = null;
+
+    }
+
+
+    async function startCamera() {
+
+      try {
+
+        if (!navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia) {
+
+          alert(
+            "Camera access is not available in this browser."
+          );
+
+          return;
+
+        }
+
+        cameraStream =
+          await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: {
+                ideal: "environment"
+              }
+            },
+            audio: false
+          });
+
+        cameraVideo.srcObject =
+          cameraStream;
+
+        cameraModal.showModal();
+
+      } catch (error) {
+
+        console.error(
+          "Camera error:",
+          error
+        );
+
+        alert(
+          "Unable to access the camera. Please check your browser camera permission."
+        );
+
+      }
+
+    }
+
+
+    function showPhotoSourceModal() {
+
+      photoSourceModal.showModal();
+
+    }
+
+
+    actionButtons.forEach((button) => {
+
+      button.addEventListener("click", () => {
+
+        actionId.value =
+          button.dataset.actionId;
+
+        actionName.textContent =
+          button.dataset.actionName;
+
+        photoRequired =
+          button.dataset.requiresPhoto === "true";
+
+        if (photoRequired) {
+
+          photoRequirement.textContent =
+            "* Required";
+
+        } else {
+
+          photoRequirement.textContent =
+            "Optional";
+
+        }
+
+        resetPhoto();
+
+        timestamp.textContent =
+          new Date().toLocaleString();
+
+        modal.showModal();
+
+      });
+
+    });
+
+
+    addPhoto.addEventListener("click", () => {
+
+      showPhotoSourceModal();
+
+    });
+
+
+    openCamera.addEventListener("click", () => {
+
+      photoSourceModal.close();
+
+      startCamera();
+
+    });
+
+
+    openLibrary.addEventListener("click", () => {
+
+      photoSourceModal.close();
+
+      activityPhoto.removeAttribute("capture");
+
+      activityPhoto.click();
+
+    });
+
+
+    cancelPhotoSource.addEventListener("click", () => {
+
+      photoSourceModal.close();
+
+    });
+
+
+    capturePhoto.addEventListener("click", () => {
+
+      if (!cameraStream) {
+        return;
+      }
+
+      const width =
+        cameraVideo.videoWidth;
+
+      const height =
+        cameraVideo.videoHeight;
+
+      if (!width || !height) {
+
+        alert(
+          "Camera is not ready yet. Please try again."
+        );
+
+        return;
+
+      }
+
+      cameraCanvas.width = width;
+      cameraCanvas.height = height;
+
+      const context =
+        cameraCanvas.getContext("2d");
+
+      context.drawImage(
+        cameraVideo,
+        0,
+        0,
+        width,
+        height
+      );
+
+      cameraCanvas.toBlob(
+        (blob) => {
+
+          if (!blob) {
+
+            alert(
+              "Unable to capture the photo."
+            );
+
+            return;
+
+          }
+
+          const file =
+            new File(
+              [blob],
+              `transport-photo-${Date.now()}.jpg`,
+              {
+                type: "image/jpeg"
+              }
+            );
+
+          const dataTransfer =
+            new DataTransfer();
+
+          dataTransfer.items.add(file);
+
+          activityPhoto.files =
+            dataTransfer.files;
+
+          photoPreview.src =
+            URL.createObjectURL(file);
+
+          photoPreviewContainer.hidden =
+            false;
+
+          updateSubmitState();
+
+          stopCamera();
+
+          cameraModal.close();
+
+        },
+        "image/jpeg",
+        0.9
+      );
+
+    });
+
+
+    cancelCamera.addEventListener("click", () => {
+
+      stopCamera();
+
+      cameraModal.close();
+
+    });
+
+
+    cameraModal.addEventListener("close", () => {
+
+      stopCamera();
+
+    });
+
+
+    activityPhoto.addEventListener("change", () => {
+
+      if (!activityPhoto.files.length) {
+
+        updateSubmitState();
+
+        return;
+
+      }
+
+      const file =
+        activityPhoto.files[0];
+
+      photoPreview.src =
+        URL.createObjectURL(file);
+
+      photoPreviewContainer.hidden =
+        false;
+
+      updateSubmitState();
+
+    });
+
+
+    retakePhoto.addEventListener("click", () => {
+
+      showPhotoSourceModal();
+
+    });
+
+
+    cancelActivity.addEventListener("click", () => {
+
+      stopCamera();
+
+      modal.close();
+
+      resetPhoto();
+
+    });
+
+
+    modal.addEventListener("close", () => {
+
+      stopCamera();
+
+      resetPhoto();
+
+    });
+
+
+    updateSubmitState();
+
+  })();
+</script>
