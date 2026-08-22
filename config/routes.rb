@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   # Transporter
   namespace :transporter do
+
     get "locations/:id",
         to: "locations#show",
         as: :location
@@ -46,16 +47,38 @@ Rails.application.routes.draw do
     post "requests/:id/complete",
          to: "requests#complete",
          as: :complete_request
+
+    get "information",
+    to: "information#index",
+    as: :information
+
+    get "information/rules",
+        to: "information#rules",
+        as: :information_rules
+
+    get "information/access",
+        to: "information#access",
+        as: :information_access
+
+    get "information/routes",
+        to: "information#routes",
+        as: :information_routes
   end
 
   # Admin
-  namespace :admin do
-    resources :locations, only: %i[index new create edit update] do
-      get :qr_poster, on: :member
-    end
-
-    resources :transporter_actions
+ namespace :admin do
+  resources :locations, only: %i[index new create edit update] do
+    get :qr_poster, on: :member
   end
+
+  resources :transporter_actions
+
+  resources :information_pages do
+    member do
+      post :toggle_publish
+    end
+  end
+end
 
   # Public clinic QR-code routes
   get "l/:qr_token",

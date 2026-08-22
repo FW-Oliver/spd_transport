@@ -1,0 +1,2 @@
+module Transporter::InformationHelper
+end

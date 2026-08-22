@@ -1,0 +1,69 @@
+<%= form_with model: [:admin, information_page] do |form| %>
+
+  <% if information_page.errors.any? %>
+    <div class="error">
+      <h2>
+        <%= pluralize(information_page.errors.count, "error") %>
+        prevented this page from being saved:
+      </h2>
+
+      <ul>
+        <% information_page.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :title, "Title" %>
+    <%= form.text_field :title,
+                        placeholder: "Example: Rules & Procedures",
+                        required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :slug, "Slug" %>
+    <%= form.text_field :slug,
+                        placeholder: "rules-and-procedures",
+                        required: true %>
+    <p class="form-help">
+      Use a simple URL-friendly name, such as
+      <strong>rules-and-procedures</strong>.
+    </p>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :content, "Content" %>
+    <%= form.text_area :content,
+                       rows: 20,
+                       placeholder: "Enter the official information here. Markdown is supported.",
+                       required: true %>
+
+    <p class="form-help">
+      Enter the official information as plain text or Markdown.
+      This content will become the source of truth for Transporters.
+    </p>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :published do %>
+      <%= form.check_box :published %>
+      Published
+    <% end %>
+
+    <p class="form-help">
+      Only published pages are visible to Transporters.
+    </p>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit "Save Information Page",
+                    class: "button button-primary" %>
+
+    <%= link_to "Cancel",
+                admin_information_pages_path,
+                class: "button" %>
+  </div>
+
+<% end %>

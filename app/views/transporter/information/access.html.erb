@@ -1,0 +1,35 @@
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <p class="location-label">SPD TRANSPORT</p>
+      <h1>Transport Information</h1>
+      <p>Quick reference for today's transport duties.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="clinic-button-list">
+
+      <%= link_to "Rules & Procedures",
+                  transporter_information_rules_path,
+                  class: "button button-primary" %>
+
+      <%= link_to "Door & Department Access",
+                  transporter_information_access_path,
+                  class: "button button-primary" %>
+
+      <%= link_to "Routes & Pickup Frequencies",
+                  transporter_information_routes_path,
+                  class: "button button-primary" %>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <%= link_to "← Back to Transporter Dashboard",
+                transporter_dashboard_path,
+                class: "button" %>
+  </div>
+
+</div>

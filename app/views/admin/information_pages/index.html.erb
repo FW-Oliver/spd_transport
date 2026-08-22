@@ -1,0 +1,87 @@
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <p class="location-label">SPD TRANSPORT</p>
+      <h1>Information Pages</h1>
+      <p>Manage the official information shown to Transporters.</p>
+    </div>
+
+    <%= link_to "New Information Page",
+                new_admin_information_page_path,
+                class: "button button-primary" %>
+  </div>
+
+  <% if notice %>
+    <div class="notice">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <% if alert %>
+    <div class="error">
+      <%= alert %>
+    </div>
+  <% end %>
+
+  <div class="card">
+
+    <% if @information_pages.any? %>
+
+      <div class="clinic-button-list">
+        <% @information_pages.each do |page| %>
+
+          <div class="transporter-request">
+
+            <div>
+              <h2><%= page.title %></h2>
+
+              <p>
+                <% if page.published? %>
+                  <span class="status status-completed">
+                    Published
+                  </span>
+                <% else %>
+                  <span class="status status-requested">
+                    Draft
+                  </span>
+                <% end %>
+              </p>
+
+              <p class="request-time">
+                Last updated:
+                <%= page.updated_at.strftime("%b %-d, %Y %I:%M %p") %>
+              </p>
+            </div>
+
+            <div class="transporter-request-status">
+              <%= link_to "View",
+                          admin_information_page_path(page),
+                          class: "button" %>
+
+              <%= link_to "Edit",
+                          edit_admin_information_page_path(page),
+                          class: "button button-primary" %>
+            </div>
+
+          </div>
+
+        <% end %>
+      </div>
+
+    <% else %>
+
+      <div class="empty-state">
+        <h2>No information pages yet</h2>
+        <p>Create the first official information page for your organization.</p>
+
+        <%= link_to "Create Information Page",
+                    new_admin_information_page_path,
+                    class: "button button-primary" %>
+      </div>
+
+    <% end %>
+
+  </div>
+
+</div>
