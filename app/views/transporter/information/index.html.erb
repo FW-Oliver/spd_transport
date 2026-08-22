@@ -1,2 +1,42 @@
-<h1>Transporter::Information#index</h1>
-<p>Find me in app/views/transporter/information/index.html.erb</p>
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <p class="location-label">SPD TRANSPORT</p>
+      <h1>Transport Information</h1>
+      <p>Official information and procedures for today's transport duties.</p>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <% if @information_pages.any? %>
+
+      <div class="clinic-button-list">
+        <% @information_pages.each do |page| %>
+
+          <%= link_to page.title,
+                      transporter_information_page_path(page.slug),
+                      class: "button button-primary" %>
+
+        <% end %>
+      </div>
+
+    <% else %>
+
+      <div class="empty-state">
+        <h2>No information available</h2>
+        <p>There are currently no published information pages.</p>
+      </div>
+
+    <% end %>
+
+  </div>
+
+  <div class="card">
+    <%= link_to "← Back to Transporter Dashboard",
+                transporter_dashboard_path,
+                class: "button" %>
+  </div>
+
+</div>

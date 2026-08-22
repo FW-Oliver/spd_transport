@@ -1,27 +1,22 @@
 require "test_helper"
 
-class Transporter::InformationControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    sign_in_as users(:two)
+class Transporter::InformationController < ApplicationController
+  before_action :require_authentication
+  before_action :require_transporter
+
+  def show
+    @information_page = current_user.organization
+                                      .information_pages
+                                      .where(published: true)
+                                      .find_by!(slug: params[:slug])
   end
 
-  test "should get index" do
-    get transporter_information_url
-    assert_response :success
-  end
+  private
 
-  test "should get rules" do
-    get transporter_information_rules_url
-    assert_response :success
-  end
-
-  test "should get access" do
-    get transporter_information_access_url
-    assert_response :success
-  end
-
-  test "should get routes" do
-    get transporter_information_routes_url
-    assert_response :success
+  def require_transporter
+    unless current_user&.transporter?
+      redirect_to root_path,
+                  alert: "You have no valid access. Please try to select the correct role."
+    end
   end
 end

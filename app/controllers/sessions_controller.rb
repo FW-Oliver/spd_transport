@@ -29,18 +29,21 @@ class SessionsController < ApplicationController
 
   private
 
-    def after_authentication_url
-    case Current.user.role
-    when "admin"
-      root_path
-    when "transporter"
-      transporter_dashboard_path
-    when "viewer"
-      dashboard_path
-    when "nurse"
-      root_path
-    else
-      root_path
-    end
+private
+
+  def after_authentication_url
+    session.delete(:return_to_after_authenticating) ||
+      case Current.user.role
+      when "admin"
+        root_path
+      when "transporter"
+        transporter_dashboard_path
+      when "viewer"
+        dashboard_path
+      when "nurse"
+        root_path
+      else
+        root_path
+      end
   end
 end

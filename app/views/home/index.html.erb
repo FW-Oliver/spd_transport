@@ -8,20 +8,27 @@
   </div>
 
   <div class="card">
+
+      <% if flash[:role_error] %>
+        <div class="error">
+          <%= flash[:role_error] %>
+        </div>
+      <% end %>
+      
     <div class="clinic-button-list">
 
-      <%= link_to "I AM ADMIN",
+      <%= link_to "#{ '✓ ' if Current.user&.admin? }I AM ADMIN",
                   role_path("admin"),
-                  class: "button button-primary" %>
+                  class: "button button-primary #{'role-selected' if Current.user&.admin?}" %>
 
-      <%= link_to "I AM A VIEWER",
+      <%= link_to "#{ '✓ ' if Current.user&.viewer? }I AM A VIEWER",
                   role_path("viewer"),
-                  class: "button button-primary" %>
+                  class: "button button-primary #{'role-selected' if Current.user&.viewer?}" %>
 
-      <%= link_to "I AM TRANSPORTER FOR TODAY",
+      <%= link_to "#{ '✓ ' if Current.user&.transporter? }I AM TRANSPORTER FOR TODAY",
                   role_path("transporter"),
-                  class: "button button-primary" %>
-
+                  class: "button button-primary #{'role-selected' if Current.user&.transporter?}" %>
+                    
       <%= link_to "I HAVE NO CREDENTIALS",
                   role_path("none"),
                   class: "button" %>

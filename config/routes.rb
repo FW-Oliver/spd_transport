@@ -1,4 +1,22 @@
 Rails.application.routes.draw do
+  # Admin
+  namespace :admin do
+    get "/",
+        to: "dashboard#index",
+        as: :dashboard
+
+    resources :locations, only: %i[index new create edit update] do
+      get :qr_poster, on: :member
+    end
+
+    resources :transporter_actions
+
+    resources :information_pages do
+      member do
+        post :toggle_publish
+      end
+    end
+  end
 
   # Public landing page
   root "home#index"
@@ -18,52 +36,43 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
 
   # Transporter
-  namespace :transporter do
+namespace :transporter do
+  get "locations/:id",
+      to: "locations#show",
+      as: :location
 
-    get "locations/:id",
-        to: "locations#show",
-        as: :location
+  get "activities",
+      to: "activities#index",
+      as: :activities
 
-    get "activities",
-        to: "activities#index",
-        as: :activities
+  get "/",
+      to: "dashboard#index",
+      as: :dashboard
 
-    get "/",
-        to: "dashboard#index",
-        as: :dashboard
+  get "information",
+      to: "information#index",
+      as: :information
 
-    post "locations/:location_id/activities",
-         to: "activities#create",
-         as: :location_activities
+  get "information/:slug",
+      to: "information#show",
+      as: :information_page
 
-    post "requests/:id/accept",
-         to: "requests#accept",
-         as: :accept_request
+  post "locations/:location_id/activities",
+       to: "activities#create",
+       as: :location_activities
 
-    post "requests/:id/start_transport",
-         to: "requests#start_transport",
-         as: :start_transport
+  post "requests/:id/accept",
+       to: "requests#accept",
+       as: :accept_request
 
-    post "requests/:id/complete",
-         to: "requests#complete",
-         as: :complete_request
+  post "requests/:id/start_transport",
+       to: "requests#start_transport",
+       as: :start_transport
 
-    get "information",
-    to: "information#index",
-    as: :information
-
-    get "information/rules",
-        to: "information#rules",
-        as: :information_rules
-
-    get "information/access",
-        to: "information#access",
-        as: :information_access
-
-    get "information/routes",
-        to: "information#routes",
-        as: :information_routes
-  end
+  post "requests/:id/complete",
+       to: "requests#complete",
+       as: :complete_request
+end
 
   # Admin
  namespace :admin do

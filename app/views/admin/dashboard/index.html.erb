@@ -1,0 +1,35 @@
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <p class="location-label">SPD TRANSPORT</p>
+      <h1>Admin Dashboard</h1>
+      <p>Manage your organization's transport system.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="clinic-button-list">
+
+      <%= link_to "Locations",
+                  admin_locations_path,
+                  class: "button button-primary" %>
+
+      <%= link_to "Transporter Actions",
+                  admin_transporter_actions_path,
+                  class: "button button-primary" %>
+
+      <%= link_to "Information Pages",
+                  admin_information_pages_path,
+                  class: "button button-primary" %>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <%= link_to "← Back to Role Selection",
+                root_path,
+                class: "button" %>
+  </div>
+
+</div>

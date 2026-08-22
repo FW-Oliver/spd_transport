@@ -42,7 +42,7 @@
     <h2>Content</h2>
 
     <div class="information-page-content">
-      <%= simple_format(@information_page.content) %>
+      <%= render_markdown(@information_page.content) %>
     </div>
 
   </div>

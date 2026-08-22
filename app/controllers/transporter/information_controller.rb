@@ -3,15 +3,17 @@ class Transporter::InformationController < ApplicationController
   before_action :require_transporter
 
   def index
+    @information_pages = current_user.organization
+                                      .information_pages
+                                      .where(published: true)
+                                      .order(:title)
   end
 
-  def rules
-  end
-
-  def access
-  end
-
-  def routes
+  def show
+    @information_page = current_user.organization
+                                      .information_pages
+                                      .where(published: true)
+                                      .find_by!(slug: params[:slug])
   end
 
   private

@@ -1,0 +1,25 @@
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <p class="location-label">SPD TRANSPORT</p>
+      <h1><%= @information_page.title %></h1>
+      <p>Official transport information.</p>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <div class="information-page-content">
+      <%= render_markdown(@information_page.content) %>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <%= link_to "← Back to Information",
+                transporter_information_path,
+                class: "button" %>
+  </div>
+
+</div>

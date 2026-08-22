@@ -23,17 +23,29 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-        <% if authenticated? %>
+    <body>
+
+      <% if authenticated? %>
         <div class="top-bar">
-          <span>Signed in as <%= Current.user.email_address %></span>
+
+          <div>
+            <span>Signed in as <%= Current.user.email_address %></span>
+
+            <span class="user-role">
+              Role:
+              <strong><%= Current.user.role.titleize %></strong>
+            </span>
+          </div>
 
           <%= button_to "Log out",
-                session_path,
-                method: :delete,
-                class: "logout-button" %>
+                        session_path,
+                        method: :delete,
+                        class: "logout-button" %>
+
         </div>
       <% end %>
-    <%= yield %>
-  </body>
+
+      <%= yield %>
+
+    </body>
 </html>
