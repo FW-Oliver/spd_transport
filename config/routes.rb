@@ -37,13 +37,20 @@ Rails.application.routes.draw do
 
   # Transporter
 namespace :transporter do
+
+  get "turbo_test",
+      to: "turbo_test#show",
+      as: :turbo_test
+
+  post "turbo_test",
+      to: "turbo_test#send_test",
+      as: :turbo_test_send
+
   get "locations/:id",
       to: "locations#show",
       as: :location
 
-  get "activities",
-      to: "activities#index",
-      as: :activities
+  resources :activities, only: [:index, :show]
 
   get "/",
       to: "dashboard#index",

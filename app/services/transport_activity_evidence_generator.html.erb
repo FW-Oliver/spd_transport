@@ -1,0 +1,54 @@
+class TransportActivityEvidenceGenerator
+  def initialize(activity)
+    @activity = activity
+  end
+
+  def call
+    return unless @activity.photo.attached?
+
+    image = MiniMagick::Image.read(
+      @activity.photo.download
+    )
+
+    image.resize "1600x1600>"
+
+    footer_height = 180
+
+    image.combine_options do |cmd|
+      cmd.gravity "south"
+      cmd.fill "rgba(0,0,0,0.75)"
+      cmd.draw "rectangle 0,0 #{image.width},#{footer_height}"
+    end
+
+    text = [
+      "SPD TRANSPORT",
+      "#{@activity.location.name} • #{@activity.transporter_action.name}",
+      @activity.performed_at.strftime("%B %-d, %Y • %I:%M %p"),
+      @activity.user.email_address
+    ].join("\n")
+
+    image.combine_options do |cmd|
+      cmd.gravity "south"
+      cmd.fill "white"
+      cmd.pointsize "32"
+      cmd.font "DejaVu-Sans"
+      cmd.interline_spacing "8"
+      cmd.draw "text 40,30 '#{text}'"
+    end
+
+    tempfile = Tempfile.new(["transport-evidence", ".jpg"])
+
+    image.format "jpg"
+    image.quality "88"
+    image.write tempfile.path
+
+    @activity.evidence_photo.attach(
+      io: File.open(tempfile.path),
+      filename: "transport-evidence-#{@activity.id}.jpg",
+      content_type: "image/jpeg"
+    )
+  ensure
+    tempfile&.close
+    tempfile&.unlink
+  end
+end

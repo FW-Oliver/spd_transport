@@ -27,7 +27,8 @@ class Transporter::ActivitiesControllerTest < ActionDispatch::IntegrationTest
     assert_equal @transporter, activity.user
     assert_equal @transporter.organization, activity.organization
     assert_not_nil activity.performed_at
-    assert_not activity.photo.attached?
+    assert_not activity.evidence_photo.attached?
+    assert_not activity.evidence_thumbnail.attached?
   end
 
   test "should not create activity without photo when action requires one" do
@@ -74,6 +75,7 @@ class Transporter::ActivitiesControllerTest < ActionDispatch::IntegrationTest
     assert_equal action, activity.transporter_action
     assert_equal @location, activity.location
     assert_equal @transporter, activity.user
-    assert activity.photo.attached?
+    assert activity.evidence_photo.attached?
+    assert activity.evidence_thumbnail.attached?
   end
 end

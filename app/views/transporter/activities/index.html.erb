@@ -3,8 +3,8 @@
   <div class="page-header">
     <div>
       <p class="location-label">SPD TRANSPORT</p>
-      <h1>Activity Log</h1>
-      <p>Recent transporter activity for your organization.</p>
+      <h1>SPD Transport Activities</h1>
+      <p>Activity history for your organization.</p>
     </div>
 
     <%= link_to "Back to Dashboard",
@@ -12,16 +12,54 @@
                 class: "button" %>
   </div>
 
-  <div class="card">
+  <div class="card activity-date-card">
 
-    <h2>Transport Activity</h2>
+    <div class="activity-date-navigation">
+
+      <%= link_to "← Previous",
+                  transporter_activities_path(
+                    date: (@selected_date - 1.day).to_date
+                  ),
+                  class: "button" %>
+
+      <div class="activity-date-current">
+        <strong>
+          <%= @selected_date.strftime("%B %-d, %Y") %>
+        </strong>
+
+        <% if @selected_date == Date.current %>
+          <span class="status status-active">TODAY</span>
+        <% end %>
+      </div>
+
+      <% if @selected_date < Date.current %>
+        <%= link_to "Next →",
+                    transporter_activities_path(
+                      date: (@selected_date + 1.day).to_date
+                    ),
+                    class: "button" %>
+      <% else %>
+        <span class="button button-disabled">
+          Next →
+        </span>
+      <% end %>
+
+    </div>
+
+    <div class="activity-count">
+      <strong><%= @activity_count %></strong>
+      <span>
+        <%= "activity".pluralize(@activity_count) %>
+      </span>
+    </div>
 
     <% if @activities.empty? %>
 
       <div class="empty-state">
         <h3>No activity recorded</h3>
         <p>
-          Transport activities will appear here after they are submitted.
+          No SPD Transport activities were recorded on
+          <%= @selected_date.strftime("%B %-d, %Y") %>.
         </p>
       </div>
 
@@ -45,7 +83,7 @@
 
                 <span>
                   <strong>Time:</strong>
-                  <%= activity.performed_at.strftime("%m/%d/%Y %I:%M %p") %>
+                  <%= activity.performed_at.strftime("%I:%M %p") %>
                 </span>
 
                 <span>
@@ -64,15 +102,19 @@
 
             <div class="activity-log-photo">
 
-              <% if activity.photo.attached? %>
+              <% if activity.evidence_thumbnail.attached? %>
 
-                <%= link_to "📷 View Photo",
-                            rails_blob_path(
-                              activity.photo,
-                              disposition: "inline"
-                            ),
-                            target: "_blank",
-                            class: "button" %>
+                <%= link_to transporter_activity_path(activity),
+                            class: "activity-photo-link" do %>
+
+                  <%= image_tag rails_blob_path(
+                        activity.evidence_thumbnail,
+                        disposition: "inline"
+                      ),
+                      class: "activity-photo-thumbnail",
+                      alt: "Photo evidence for #{activity.transporter_action.name}" %>
+
+                <% end %>
 
               <% else %>
 

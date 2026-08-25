@@ -1,0 +1,22 @@
+<%= turbo_stream_from "turbo_test" %>
+
+<div class="container">
+  <div class="card">
+    <h1>Turbo Test</h1>
+
+    <div id="turbo-test-message">
+      Waiting for Turbo...
+    </div>
+
+    <button type="button"
+            id="enable-bell"
+            class="button">
+      🔔 Enable Bell
+    </button>
+
+    <%= button_to "Send Turbo Test",
+                  transporter_turbo_test_send_path,
+                  method: :post,
+                  class: "button button-primary" %>
+  </div>
+</div>

@@ -1,3 +1,4 @@
+<%= turbo_stream_from "transport_activity_#{current_user.organization_id}_#{@selected_date}" %>
 <div class="container">
 
   <h1>SPD Transport Dashboard</h1>
@@ -109,5 +110,125 @@
     <p>No transport requests yet.</p>
 
   <% end %>
+<div class="activities-section">
 
+  <div class="activity-date-navigation">
+
+    <%= link_to "← Previous",
+                dashboard_path(
+                  date: (@selected_date - 1.day).to_date
+                ),
+                class: "button" %>
+
+    <div class="activity-date-current">
+      <strong>
+        <%= @selected_date.strftime("%B %-d, %Y") %>
+      </strong>
+
+      <% if @selected_date == Date.current %>
+        <span class="status status-active">TODAY</span>
+      <% end %>
+    </div>
+
+    <% if @selected_date < Date.current %>
+
+      <%= link_to "Next →",
+                  dashboard_path(
+                    date: (@selected_date + 1.day).to_date
+                  ),
+                  class: "button" %>
+
+    <% else %>
+
+      <span class="button button-disabled">
+        Next →
+      </span>
+
+    <% end %>
+
+      </div>
+
+      <div class="activity-count">
+        <strong><%= @activity_count %></strong>
+        <span>
+          <%= "activity".pluralize(@activity_count) %>
+        </span>
+      </div>
+
+          <% if @activities.any? %>
+
+            <div class="activity-log">
+
+              <% @activities.each do |activity| %>
+
+                <div class="activity-log-entry">
+
+                  <div class="activity-log-main">
+
+                    <div class="activity-log-action">
+                      <strong>
+                        <%= activity.transporter_action.name %>
+                      </strong>
+                    </div>
+
+                    <div class="activity-log-details">
+
+                      <span>
+                        <strong>Time:</strong>
+                        <%= activity.performed_at.strftime("%I:%M %p") %>
+                      </span>
+
+                      <span>
+                        <strong>Location:</strong>
+                        <%= activity.location.name %>
+                      </span>
+
+                      <span>
+                        <strong>Transporter:</strong>
+                        <%= activity.user.email_address %>
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                  <div class="activity-log-photo">
+
+                    <% if activity.evidence_thumbnail.attached? %>
+
+              <%= image_tag activity.evidence_thumbnail,
+                    class: "activity-photo-thumbnail",
+                    alt: "Photo evidence for #{activity.transporter_action.name}" %>
+
+                    <% else %>
+
+                      <span class="no-photo">
+                        No photo
+                      </span>
+
+                    <% end %>
+
+                  </div>
+
+                </div>
+
+              <% end %>
+
+            </div>
+
+            <%= link_to "View All Activity",
+                        transporter_activities_path,
+                        class: "button" %>
+
+          <% else %>
+  <div class="empty-state">
+                  <h3>No transport activity yet</h3>
+                  <p>
+                    Please wait or come back later.
+                    The transporter may still be preparing or completing the delivery.
+                  </p>
+                </div>
+
+          <% end %>
+        </div>
 </div>

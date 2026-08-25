@@ -3,17 +3,48 @@ class Transporter::ActivitiesController < ApplicationController
   before_action :require_transporter
 
   def index
+    @selected_date =
+      if params[:date].present?
+        Date.parse(params[:date])
+      else
+        Date.current
+      end
+
     @activities = current_user.organization
-                              .transport_activities
-                              .includes(:user, :transporter_action, :location, photo_attachment: :blob)
-                              .order(performed_at: :desc)
+                          .transport_activities
+                          .includes(
+                            :user,
+                            :transporter_action,
+                            :location,
+                            evidence_thumbnail_attachment: :blob
+                          )
+                          .where(
+                            performed_at: @selected_date.beginning_of_day..@selected_date.end_of_day
+                          )
+                          .order(performed_at: :desc)
+
+    @activity_count = @activities.size
+  end
+
+  def show
+    @activity = current_user.organization
+                        .transport_activities
+                        .includes(:user, :transporter_action, :location)
+                        .find(params[:id])
+
+    @selected_date = @activity.performed_at.to_date
+
+    unless @activity.evidence_photo.attached?
+      redirect_to transporter_activities_path,
+                  alert: "Photo evidence is not available."
+    end
   end
 
   def create
     location = current_user.organization
-                           .locations
-                           .active
-                           .find(params[:location_id])
+                      .locations
+                      .active
+                      .find(params[:location_id])
 
     action = current_user.organization
                         .transporter_actions
@@ -28,7 +59,12 @@ class Transporter::ActivitiesController < ApplicationController
       performed_at: Time.current
     )
 
-    activity.photo.attach(params[:photo]) if params[:photo].present?
+    if params[:photo].present?
+      TransportActivityEvidenceGenerator.new(
+        activity,
+        params[:photo]
+      ).call
+    end
 
     if activity.save
       redirect_to transporter_location_path(location),
