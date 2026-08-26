@@ -29,19 +29,20 @@ class HomeController < ApplicationController
 
   private
 
-def redirect_for_role(role, destination)
-  unless Current.user
-    request_authentication
-    return
-  end
+  def redirect_for_role(role, destination)
+    unless Current.user
+      request_authentication
+      return
+    end
 
-  if Current.user.public_send("#{role}?")
-    redirect_to destination
-  else
-    flash[:role_error] =
-      "Your account is an #{Current.user.role.capitalize} account. " \
-      "The #{role.capitalize} role is not available for your user."
+    if Current.user.public_send("#{role}?")
+      redirect_to destination
+    else
+      flash[:role_error] =
+        "Your account is an #{Current.user.role.capitalize} account. " \
+        "The #{role.capitalize} role is not available for your user."
 
-    redirect_to root_path
+      redirect_to root_path
+    end
   end
 end
