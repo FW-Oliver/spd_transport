@@ -35,9 +35,8 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  # Transporter
+# Transporter
 namespace :transporter do
-
   get "turbo_test",
       to: "turbo_test#show",
       as: :turbo_test
@@ -50,7 +49,7 @@ namespace :transporter do
       to: "locations#show",
       as: :location
 
-  resources :activities, only: [:index, :show]
+  resources :activities, only: [ :index, :show ]
 
   get "/",
       to: "dashboard#index",
@@ -81,7 +80,7 @@ namespace :transporter do
        as: :complete_request
 end
 
-  # Admin
+ # Admin
  namespace :admin do
   resources :locations, only: %i[index new create edit update] do
     get :qr_poster, on: :member
@@ -108,5 +107,4 @@ end
   post "l/:qr_token/cancel/:request_id",
        to: "locations#cancel_request",
        as: :cancel_location_transport
-
 end

@@ -55,4 +55,3 @@ class Transporter::RequestsController < ApplicationController
     end
   end
 end
-

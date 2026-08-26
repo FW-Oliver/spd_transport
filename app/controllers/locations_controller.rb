@@ -1,6 +1,6 @@
 class LocationsController < ApplicationController
   allow_unauthenticated_access
-  
+
   before_action :load_location
 
   def show

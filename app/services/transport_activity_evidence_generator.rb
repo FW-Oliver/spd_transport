@@ -22,7 +22,7 @@ class TransportActivityEvidenceGenerator
 
     add_evidence_panel(evidence_image)
 
-    evidence_file = Tempfile.new(["transport-evidence", ".jpg"])
+    evidence_file = Tempfile.new([ "transport-evidence", ".jpg" ])
 
     evidence_image.format "jpg"
     evidence_image.quality "88"
@@ -42,7 +42,7 @@ class TransportActivityEvidenceGenerator
 
     add_thumbnail_panel(thumbnail_image)
 
-    thumbnail_file = Tempfile.new(["transport-evidence-thumbnail", ".jpg"])
+    thumbnail_file = Tempfile.new([ "transport-evidence-thumbnail", ".jpg" ])
 
     thumbnail_image.format "jpg"
     thumbnail_image.quality "82"
@@ -73,9 +73,9 @@ class TransportActivityEvidenceGenerator
   end
 
   def add_evidence_panel(image)
-    font_size = [(image.width * 0.025).round, 18].max
-    line_spacing = [(font_size * 0.25).round, 4].max
-    padding = [(image.width * 0.025).round, 30].max
+    font_size = [ (image.width * 0.025).round, 18 ].max
+    line_spacing = [ (font_size * 0.25).round, 4 ].max
+    padding = [ (image.width * 0.025).round, 30 ].max
 
     panel_height = (font_size * 5.5).round + (padding * 2)
 

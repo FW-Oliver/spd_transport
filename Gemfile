@@ -42,7 +42,7 @@ gem "image_processing", "~> 1.2"
 
 gem "rqrcode"
 
-#Formatting
+# Formatting
 gem "commonmarker", "~> 2.8"
 
 group :development, :test do
