@@ -1,4 +1,12 @@
+<%= turbo_stream_from "transport_requests_#{current_user.organization_id}" %>
+
 <div class="container">
+
+    <button type="button"
+        id="enable-bell"
+        class="button">
+      🔊 Enable Sound Alerts
+    </button>
 
   <div class="page-header">
 <div>
@@ -49,82 +57,7 @@
 
 </div>
 
-    <% if @requests.any? %>
-
-      <% @requests.each do |request| %>
-
-        <div class="transporter-request">
-
-          <div>
-            <h2><%= request.location.name %></h2>
-
-            <p>
-              Requested by:
-              <strong><%= request.requested_by_name %></strong>
-            </p>
-
-            <p class="request-time">
-              <%= request.requested_at.strftime("%I:%M %p") %>
-            </p>
-          </div>
-
-          <div class="transporter-request-status">
-
-            <% if request.status == "requested" %>
-
-              <span class="status status-requested">
-                Requested
-              </span>
-
-              <%= button_to "Accept",
-                    transporter_accept_request_path(request.id),
-                    method: :post,
-                    class: "button button-primary" %>
-
-              <% elsif request.status == "accepted" %>
-
-                <span class="status status-accepted">
-                  Accepted
-                </span>
-
-                <%= button_to "Start Transport",
-                      transporter_start_transport_path(request.id),
-                      method: :post,
-                      class: "button button-primary" %>
-
-          <% elsif request.status == "in_transit" %>
-
-            <span class="status status-in-transit">
-              In-Transit
-            </span>
-
-            <%= button_to "Mark Completed",
-                  transporter_complete_request_path(request.id),
-                  method: :post,
-                  class: "button button-primary" %>
-
-          <% elsif request.status == "completed" %>
-
-            <span class="status status-completed">
-              Completed
-            </span>
-
-          <% end %>
-
-          </div>
-
-        </div>
-
-      <% end %>
-
-    <% else %>
-
-      <div class="empty-state">
-        <h2>No active requests</h2>
-        <p>There are currently no transport requests waiting for SPD.</p>
-      </div>
-
-    <% end %>
+<%= render "transporter/requests/requests", requests: @requests %>
 
   </div>
 

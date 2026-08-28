@@ -1,48 +1,119 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails"
+
 import "controllers"
-let bellAudioContext = null
 
-function playBell() {
-  if (!bellAudioContext) return
+const SOUND_STORAGE_KEY = "spdTransportSoundEnabled"
 
-  const now = bellAudioContext.currentTime
+let soundEnabled = localStorage.getItem(SOUND_STORAGE_KEY) !== "false"
 
-  const oscillator = bellAudioContext.createOscillator()
-  const gain = bellAudioContext.createGain()
+let announcementAudio = null
+let cancelledAudio = null
 
-  oscillator.type = "sine"
-  oscillator.frequency.setValueAtTime(880, now)
-  oscillator.frequency.setValueAtTime(1174.66, now + 0.12)
+function initializeAudio() {
+  const audioContainer = document.getElementById("spd-transport-audio")
 
-  gain.gain.setValueAtTime(0.0001, now)
-  gain.gain.exponentialRampToValueAtTime(0.25, now + 0.01)
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6)
+  if (!audioContainer) return
 
-  oscillator.connect(gain)
-  gain.connect(bellAudioContext.destination)
+  announcementAudio = new Audio(audioContainer.dataset.announcement)
+  cancelledAudio = new Audio(audioContainer.dataset.cancelled)
 
-  oscillator.start(now)
-  oscillator.stop(now + 0.6)
+  announcementAudio.preload = "auto"
+  cancelledAudio.preload = "auto"
+}
+
+function updateSoundButton() {
+  const button = document.getElementById("enable-bell")
+  if (!button) return
+
+  button.textContent = soundEnabled
+    ? "🔊 Sound Alerts: ON"
+    : "🔇 Sound Alerts: OFF"
+}
+
+async function enableSound() {
+  if (!announcementAudio) initializeAudio()
+
+  if (!announcementAudio) return
+
+  try {
+    await announcementAudio.play()
+
+    announcementAudio.pause()
+    announcementAudio.currentTime = 0
+
+    soundEnabled = true
+    localStorage.setItem(SOUND_STORAGE_KEY, "true")
+
+    updateSoundButton()
+  } catch (error) {
+    console.warn("Unable to enable transport sound:", error)
+  }
+}
+
+function toggleSound() {
+  if (soundEnabled) {
+    soundEnabled = false
+    localStorage.setItem(SOUND_STORAGE_KEY, "false")
+  } else {
+    enableSound()
+    return
+  }
+
+  updateSoundButton()
+}
+
+function playAudio(audio) {
+  if (!soundEnabled || !audio) return
+
+  audio.currentTime = 0
+
+  audio.play().catch((error) => {
+    console.warn("Unable to play transport sound:", error)
+  })
+}
+
+function playAnnouncement() {
+  playAudio(announcementAudio)
+}
+
+function playCancellation() {
+  playAudio(cancelledAudio)
 }
 
 document.addEventListener("turbo:load", () => {
-  const enableBellButton = document.getElementById("enable-bell")
+  initializeAudio()
+  updateSoundButton()
 
-  if (!enableBellButton) return
+  const button = document.getElementById("enable-bell")
 
-  enableBellButton.addEventListener("click", async () => {
-    bellAudioContext ||= new AudioContext()
+  if (!button) return
 
-    await bellAudioContext.resume()
-
-    playBell()
-
-    enableBellButton.textContent = "🔔 Bell Enabled"
-    enableBellButton.disabled = true
-  })
+  button.addEventListener("click", toggleSound)
 })
 
-document.addEventListener("turbo:before-stream-render", () => {
-  playBell()
+document.addEventListener("turbo:before-stream-render", (event) => {
+  const stream = event.target
+
+  if (
+    stream.getAttribute("target") === "transporter-requests"
+  ) {
+    const sound = stream.getAttribute("data-sound")
+
+    if (sound === "announcement") {
+      playAnnouncement()
+    } else if (sound === "cancelled") {
+      playCancellation()
+    }
+  }
+})
+
+document.addEventListener("turbo:before-stream-render", (event) => {
+  const stream = event.target
+
+  if (
+    stream.getAttribute("action") === "update" &&
+    stream.getAttribute("target") === "viewer-refresh"
+  ) {
+    window.location.reload()
+  }
 })

@@ -20,6 +20,14 @@
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+
+    <%= tag.div(
+      id: "spd-transport-audio",
+      data: {
+        announcement: asset_path("spd_transport_announcement.m4a"),
+        cancelled: asset_path("spd_transport_cancelled.mp3")
+      }
+    ) %>
     <%= javascript_importmap_tags %>
   </head>
 

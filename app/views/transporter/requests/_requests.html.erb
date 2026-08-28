@@ -1,0 +1,12 @@
+<div id="transporter-requests">
+  <% if requests.any? %>
+    <% requests.each do |request| %>
+      <%= render "transporter/requests/request", request: request %>
+    <% end %>
+  <% else %>
+    <div class="empty-state">
+      <h2>No active requests</h2>
+      <p>There are currently no transport requests waiting for SPD.</p>
+    </div>
+  <% end %>
+</div>
