@@ -43,7 +43,7 @@ gem "image_processing", "~> 1.2"
 gem "rqrcode"
 
 # Formatting
-gem "commonmarker", "~> 2.8"
+gem "commonmarker", "~> 2.10"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
