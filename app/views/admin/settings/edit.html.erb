@@ -1,0 +1,36 @@
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <p class="location-label">SPD TRANSPORT</p>
+      <h1>Organization Settings</h1>
+      <p>Configure settings for your organization's transport system.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <%= form_with model: @organization,
+                  url: admin_settings_path,
+                  method: :patch do |form| %>
+
+      <div>
+        <%= form.label :timezone_preference, "Timezone" %>
+
+        <%= form.select :timezone_preference,
+                        Admin::SettingsController::TIMEZONE_OPTIONS,
+                        { selected: @organization.timezone_preference.presence || "auto" } %>
+      </div>
+
+      <div>
+        <%= form.submit "Save Settings",
+                        class: "button button-primary" %>
+
+        <%= link_to "Cancel",
+                    admin_dashboard_path,
+                    class: "button" %>
+      </div>
+
+    <% end %>
+  </div>
+
+</div>

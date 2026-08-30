@@ -58,8 +58,7 @@
             </span>
 
             <span>
-              <%= request.requested_at.strftime("%I:%M %p") %>
-            </span>
+          <%= organization_time(request.requested_at).strftime("%I:%M %p") %>
 
           </div>
 
@@ -175,7 +174,7 @@
 
                       <span>
                         <strong>Time:</strong>
-                        <%= activity.performed_at.strftime("%I:%M %p") %>
+                        <%= organization_time(activity.performed_at).strftime("%I:%M %p") %>
                       </span>
 
                       <span>

@@ -5,6 +5,8 @@ Rails.application.routes.draw do
         to: "dashboard#index",
         as: :dashboard
 
+    resource :settings, only: [:edit, :update]
+
     resources :locations, only: %i[index new create edit update] do
       get :qr_poster, on: :member
     end

@@ -50,7 +50,7 @@
 
               <p class="request-time">
                 Last updated:
-                <%= page.updated_at.strftime("%b %-d, %Y %I:%M %p") %>
+                <%= organization_time(page.updated_at).strftime("%b %-d, %Y %I:%M %p") %>
               </p>
             </div>
 

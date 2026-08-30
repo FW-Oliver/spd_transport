@@ -14,12 +14,12 @@ class DashboardController < ApplicationController
                           .includes(:location)
                           .order(created_at: :asc)
 
-  @selected_date =
-    if params[:date].present?
-      Date.parse(params[:date])
-    else
-      Date.current
-    end
+    @selected_date =
+      if params[:date].present?
+        Date.parse(params[:date])
+      else
+        organization_today
+      end
 
   @activities = current_user.organization
                             .transport_activities
@@ -30,8 +30,9 @@ class DashboardController < ApplicationController
                               evidence_thumbnail_attachment: :blob
                             )
                             .where(
-                              performed_at: @selected_date.beginning_of_day..
-                                            @selected_date.end_of_day
+                              performed_at:
+                                @selected_date.in_time_zone(organization_timezone).beginning_of_day..
+                                @selected_date.in_time_zone(organization_timezone).end_of_day
                             )
                             .order(performed_at: :desc)
 

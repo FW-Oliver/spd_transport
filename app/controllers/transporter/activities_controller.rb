@@ -7,7 +7,7 @@ class Transporter::ActivitiesController < ApplicationController
       if params[:date].present?
         Date.parse(params[:date])
       else
-        Date.current
+        organization_today
       end
 
     @activities = current_user.organization
@@ -19,7 +19,9 @@ class Transporter::ActivitiesController < ApplicationController
                             evidence_thumbnail_attachment: :blob
                           )
                           .where(
-                            performed_at: @selected_date.beginning_of_day..@selected_date.end_of_day
+                            performed_at:
+                              @selected_date.in_time_zone(organization_timezone).beginning_of_day..
+                              @selected_date.in_time_zone(organization_timezone).end_of_day
                           )
                           .order(performed_at: :desc)
 
@@ -32,7 +34,8 @@ class Transporter::ActivitiesController < ApplicationController
                         .includes(:user, :transporter_action, :location)
                         .find(params[:id])
 
-    @selected_date = @activity.performed_at.to_date
+    @selected_date =
+      @activity.performed_at.in_time_zone(organization_timezone).to_date
 
     unless @activity.evidence_photo.attached?
       redirect_to transporter_activities_path,

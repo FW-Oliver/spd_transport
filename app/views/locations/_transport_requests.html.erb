@@ -20,7 +20,7 @@
             </strong>
 
             <span>
-              <%= request.requested_at.strftime("%I:%M %p") %>
+              <%= organization_time(request.requested_at).strftime("%I:%M %p") %>
             </span>
 
           </div>

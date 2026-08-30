@@ -34,7 +34,7 @@
 
     <p class="request-time">
       Last updated:
-      <%= @information_page.updated_at.strftime("%b %-d, %Y %I:%M %p") %>
+      <%= organization_time(@information_page.updated_at).strftime("%b %-d, %Y %I:%M %p") %>
     </p>
 
     <hr>
