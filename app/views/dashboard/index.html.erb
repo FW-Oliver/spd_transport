@@ -18,8 +18,8 @@
 
       <% active_count = location.transport_requests.active.count %>
 
-      <%= link_to location_path(location.qr_token),
-                  class: "button button-primary" do %>
+        <%= link_to location_path(location.qr_token, from: "dashboard"),
+            class: "button button-primary" do %>
 
         <%= location.name %>
 

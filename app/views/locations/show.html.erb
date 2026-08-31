@@ -5,6 +5,12 @@
 
   <div class="card location-card">
 
+      <% if params[:from] == "dashboard" %>
+        <%= link_to "← Back to Dashboard",
+                    dashboard_path,
+                    class: "button" %>
+      <% end %>
+
     <p class="location-label">SPD TRANSPORT</p>
 
     <h1><%= @location.name %></h1>
