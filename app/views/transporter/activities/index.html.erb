@@ -96,6 +96,13 @@
                   <%= activity.location.name %>
                 </span>
 
+                <% if activity.transporter_action.requires_acknowledgement? %>
+                  <span>
+                    <strong>Acknowledgement:</strong>
+                    <span class="status status-active">✓ Confirmed</span>
+                  </span>
+                <% end %>
+                
               </div>
 
             </div>

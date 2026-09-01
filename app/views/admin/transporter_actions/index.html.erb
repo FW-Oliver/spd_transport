@@ -29,6 +29,7 @@
             <th>Action</th>
             <th>Description</th>
             <th>Photo</th>
+            <th>Acknowledgement</th>
             <th>Status</th>
             <th>Position</th>
             <th></th>
@@ -53,6 +54,18 @@
 
               <td>
                 <% if action.requires_photo? %>
+                  <span class="status status-active">
+                    Required
+                  </span>
+                <% else %>
+                  <span>
+                    Not required
+                  </span>
+                <% end %>
+              </td>
+              
+              <td>
+                <% if action.requires_acknowledgement? %>
                   <span class="status status-active">
                     Required
                   </span>
