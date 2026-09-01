@@ -376,7 +376,7 @@ th {
 
 .activity-date-navigation {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 16px;
   margin-bottom: 24px;
@@ -668,4 +668,45 @@ th {
 
 .role-header h1 {
   margin-top: 6px;
+}
+
+.clinic-button-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.clinic-button-list small {
+  margin-left: 8px;
+  color: #475569;
+  font-size: 13px;
+}
+
+.transport-action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.transport-action-requirements {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.transport-action-requirements small {
+  color: #475569;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+#submit-activity:disabled {
+  background: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+  opacity: 1;
 }

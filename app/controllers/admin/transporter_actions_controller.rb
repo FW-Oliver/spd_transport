@@ -54,6 +54,8 @@ class Admin::TransporterActionsController < ApplicationController
       :name,
       :description,
       :requires_photo,
+      :requires_acknowledgement,
+      :acknowledgement_text,
       :active,
       :position
     )

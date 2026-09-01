@@ -29,18 +29,26 @@
 
     <div class="clinic-button-list">
       <% @actions.each do |action| %>
-        <div>
+        <div class="transport-action-row">
           <button type="button"
                   class="button button-primary activity-action-button"
                   data-action-id="<%= action.id %>"
                   data-action-name="<%= action.name %>"
-                  data-requires-photo="<%= action.requires_photo? %>">
+                  data-requires-photo="<%= action.requires_photo? %>"
+                  data-requires-acknowledgement="<%= action.requires_acknowledgement? %>"
+                  data-acknowledgement-text="<%= action.acknowledgement_text %>">
             <%= action.name %>
           </button>
 
-          <% if action.requires_photo? %>
-            <small>📷 Photo required</small>
-          <% end %>
+          <div class="transport-action-requirements">
+            <% if action.requires_photo? %>
+              <small>📷 Photo required</small>
+            <% end %>
+
+            <% if action.requires_acknowledgement? %>
+              <small>☑ Acknowledgement required</small>
+            <% end %>
+          </div>
         </div>
       <% end %>
     </div>
@@ -181,6 +189,25 @@
                            "",
                            id: "activity-action-id" %>
 
+      <div
+        id="acknowledgement-section"
+        class="activity-photo-section"
+        hidden
+      >
+        <h3>⚠️ Acknowledgement Required</h3>
+
+        <div id="acknowledgement-text" class="acknowledgement-text"></div>
+
+        <label class="acknowledgement-checkbox">
+          <%= check_box_tag :acknowledgement_confirmed,
+                            "1",
+                            false,
+                            id: "acknowledgement-confirmed" %>
+
+          I have read and acknowledge these instructions.
+        </label>
+      </div>
+
       <div class="activity-photo-section">
 
         <h3>Photo Evidence</h3>
@@ -307,19 +334,33 @@
     const submitActivity =
       document.getElementById("submit-activity");
 
+    const acknowledgementSection =
+      document.getElementById("acknowledgement-section");
+
+    const acknowledgementText =
+      document.getElementById("acknowledgement-text");
+
+    const acknowledgementConfirmed =
+      document.getElementById("acknowledgement-confirmed");
+
     let photoRequired = false;
+    let acknowledgementRequired = false;
 
     let cameraStream = null;
 
 
     function updateSubmitState() {
 
-      if (photoRequired) {
-        submitActivity.disabled =
-          !activityPhoto.files.length;
-      } else {
-        submitActivity.disabled = false;
-      }
+      const photoReady =
+        !photoRequired ||
+        activityPhoto.files.length > 0;
+
+      const acknowledgementReady =
+        !acknowledgementRequired ||
+        acknowledgementConfirmed.checked;
+
+      submitActivity.disabled =
+        !(photoReady && acknowledgementReady);
 
     }
 
@@ -431,6 +472,26 @@
             "Optional";
 
         }
+
+        acknowledgementRequired =
+          button.dataset.requiresAcknowledgement === "true";
+
+        if (acknowledgementRequired) {
+
+          acknowledgementSection.hidden = false;
+
+          acknowledgementText.textContent =
+            button.dataset.acknowledgementText || "";
+
+        } else {
+
+          acknowledgementSection.hidden = true;
+
+          acknowledgementText.textContent = "";
+
+        }
+
+        acknowledgementConfirmed.checked = false;
 
         resetPhoto();
 
@@ -602,6 +663,12 @@
       updateSubmitState();
 
     });
+
+
+    acknowledgementConfirmed.addEventListener(
+      "change",
+      updateSubmitState
+    );
 
 
     retakePhoto.addEventListener("click", () => {

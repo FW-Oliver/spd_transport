@@ -57,6 +57,27 @@
       </div>
 
       <div class="form-group">
+        <label>
+          <%= form.check_box :requires_acknowledgement %>
+          Requires transporter acknowledgement
+        </label>
+        <p>
+          If enabled, the transporter must acknowledge the instructions
+          before completing this action.
+        </p>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :acknowledgement_text, "Acknowledgement / Instructions" %>
+        <%= form.text_area :acknowledgement_text,
+                           rows: 8,
+                           placeholder: "Optional. Enter any instructions, Do's and Don'ts, or acknowledgement text for the transporter." %>
+        <p>
+          This text will be shown to the transporter when acknowledgement is required.
+        </p>
+      </div>
+
+      <div class="form-group">
         <%= form.label :position, "Display order" %>
 
         <%= form.number_field :position,

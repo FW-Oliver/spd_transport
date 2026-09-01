@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_30_032434) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_01_000431) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -120,12 +120,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_30_032434) do
   end
 
   create_table "transporter_actions", force: :cascade do |t|
+    t.text "acknowledgement_text"
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.text "description"
     t.string "name", null: false
     t.integer "organization_id", null: false
     t.integer "position", default: 0, null: false
+    t.boolean "requires_acknowledgement", default: false
     t.boolean "requires_photo", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["organization_id"], name: "index_transporter_actions_on_organization_id"
